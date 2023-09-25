@@ -58,10 +58,10 @@ Token* Scanner::nextToken() {
     Token::Type ttype;
     c = nextChar();
     while (c == ' ') c = nextChar();
-    if(c == '%'){
-        while(c != '\n') c = nextChar();
+    if (c == '%') {
+        while (c != '\n') c = nextChar();
         c = nextChar();
-    }   
+    }
     if (c == '\0') return new Token(Token::END);
     startLexema();
     state = 0;
@@ -155,6 +155,39 @@ Token::Type Scanner::checkReserved(string lexema) {
 Instruction::IType Token::tokenToIType(Token::Type tt) {
     Instruction::IType itype;
     switch (tt) {
+        case (Token::PRINT):
+            itype = Instruction::IPRINT;
+            break;
+        case (Token::LOAD):
+            itype = Instruction::ILOAD;
+            break;
+        case (Token::STORE):
+            itype = Instruction::ISTORE;
+            break;
+        case (Token::SWAP):
+            itype = Instruction::ISWAP;
+            break;
+        case (Token::SKIP):
+            itype = Instruction::ISKIP;
+            break;
+        case (Token::GOTO):
+            itype = Instruction::IGOTO;
+            break;
+        case (Token::JMPLE):
+            itype = Instruction::IJMPLE;
+            break;
+        case (Token::JMPLT):
+            itype = Instruction::IJMPLT;
+            break;
+        case (Token::JMPGE):
+            itype = Instruction::IJMPGE;
+            break;
+        case (Token::JMPGT):
+            itype = Instruction::IJMPGT;
+            break;
+        case (Token::JMPEQ):
+            itype = Instruction::IJMPEQ;
+            break;
         case (Token::PUSH):
             itype = Instruction::IPUSH;
             break;
