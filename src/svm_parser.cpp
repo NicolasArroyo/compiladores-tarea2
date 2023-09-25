@@ -58,6 +58,9 @@ Token* Scanner::nextToken() {
     Token::Type ttype;
     c = nextChar();
     while (c == ' ') c = nextChar();
+    if(c == '%')
+        while(c != '\n') c = nextChar();
+    c = nextChar();
     if (c == '\0') return new Token(Token::END);
     startLexema();
     state = 0;
