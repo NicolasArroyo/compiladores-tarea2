@@ -288,18 +288,23 @@ Instruction* Parser::parseInstruction() {
     int tipo = 0; // 0 no args, 1 un arg entero,  1 un arg label
 
     // match label, si existe
+    if (current->type == Token::LABEL) {
+        label = current->lexema;
+        advance();
+    }
 
-
-    if (match(Token::POP) || match(Token::ADD)) {  // mas casos
+    if (match(Token::POP) || match(Token::ADD) || match(Token::DUP) || match(Token::SUB) ||
+        match(Token::MUL) || match(Token::DIV) || match(Token::SWAP) || match(Token::SKIP)) {  // mas casos
         tipo = 0;
         ttype = previous->type;
     }
-    else if (match(Token::PUSH) || match(Token::STORE)) { // mas casos
+    else if (match(Token::PUSH) || match(Token::STORE) || match(Token::LOAD)) { // mas casos
         tipo = 1;
         ttype = previous->type;
 
     }
-    else if (match(Token::GOTO)) { // mas casos
+    else if (match(Token::GOTO) || match(Token::JMPEQ) || match(Token::JMPGT) ||
+             match(Token::JMPGE) || match(Token::JMPLT) || match(Token::JMPLE)) { // mas casos
         tipo = 2;
         ttype = previous->type;
 
@@ -314,14 +319,20 @@ Instruction* Parser::parseInstruction() {
         exit(0);
     }
 
-    if (tipo == 0) {
-        instr = new Instruction(label, Token::tokenToIType(ttype));
-    }
-    else if (tipo == 2) {
-        //instr =
-    }
-    else { //
-        //instr =
+    switch (tipo) {
+        case 0:
+            instr = new Instruction(label, Token::tokenToIType(ttype));
+            break;
+        case 1:
+            if (previous->type == Token::NUM) {
+                instr = new Instruction(label, Token::tokenToIType(ttype), stoi(previous->lexema));
+            }
+            break;
+        case 2:
+            if (previous->type == Token::LABEL) {
+                instr = new Instruction(label, Token::tokenToIType(ttype), previous->lexema);
+            }
+            break;
     }
 
     return instr;
